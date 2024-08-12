@@ -14,8 +14,6 @@ export const ListCotacoes = () => {
     }
   }
 
-  console.log(cotacoesList);
-
   useEffect(() => {
     fetchData();
   }, [])
@@ -51,7 +49,7 @@ export const ListCotacoes = () => {
         }, i) => (
           <div
             style={{
-              backgroundColor: i % 2 !== 0 ? '#7f1d1d' : ''
+              backgroundColor: i % 2 !== 0 ? '#7f1d1d' : '#141418'
             }}
             className="rounded grid p-2
             grid-cols-4 text-center"
