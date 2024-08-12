@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
+import { ref, set, push } from 'firebase/database';
 import { db } from '../shared/firebase';
 
 export const ProdutoForm = () => {
@@ -12,14 +12,17 @@ export const ProdutoForm = () => {
     event.preventDefault();
     
     try {
-      await addDoc(collection(db, 'produtos'), {
+      const newDocRef = push(ref(db, 'produtos'));
+
+      await set(newDocRef, {
         nome,
         descricao,
         unidade,
         categoria
       });
-      alert('ué')
+
       alert('Produto cadastrado com sucesso!');
+      
       setNome('');
       setDescricao('');
       setUnidade('');
@@ -27,7 +30,6 @@ export const ProdutoForm = () => {
     } catch (error) {
       alert('Erro ao cadastrar produto: ' + error.message);
     }
-    alert('ué 2')
   };
 
   return (

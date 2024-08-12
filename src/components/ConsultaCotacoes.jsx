@@ -1,17 +1,24 @@
-import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useState } from 'react';
+import { get, equalTo, query, ref, orderByChild } from 'firebase/database';
 import { db } from '../shared/firebase';
 
 export const ConsultaCotacoes = () => {
   const [produtoId, setProdutoId] = useState('');
   const [cotacoes, setCotacoes] = useState([]);
 
+  const docRef = ref(db, 'cotacoes');
+
   const handleSearch = async (event) => {
     event.preventDefault();
-    const q = query(collection(db, 'cotacoes'), where('produtoId', '==', produtoId));
-    const querySnapshot = await getDocs(q);
-    const cotacoesList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setCotacoes(cotacoesList);
+
+    const dbQuery = query(docRef, orderByChild('produtoId'), equalTo(+produtoId));
+    const snapshot = await get(dbQuery);
+
+    if (snapshot.exists()) {
+      setCotacoes(Object.values(snapshot.val()));
+    } else {
+      setCotacoes([]);
+    }
   };
 
   return (
@@ -27,8 +34,8 @@ export const ConsultaCotacoes = () => {
       <div>
         {cotacoes.length > 0 ? (
           <ul>
-            {cotacoes.map(cotacao => (
-              <li key={cotacao.id} className="p-2 bg-[#f87171] my-2 rounded border-2 border-[#991b1b]">
+            {cotacoes.map((cotacao, i) => (
+              <li key={`cotacao-${i}`} className="p-2 bg-[#f87171] my-2 rounded border-2 border-[#991b1b]">
                 <p className="text-black"><strong>Fornecedor ID:</strong> {cotacao.fornecedorId}</p>
                 <p className="text-black"><strong>Data:</strong> {cotacao.data}</p>
                 <p className="text-black"><strong>Preço:</strong> {cotacao.preco}</p>
@@ -36,7 +43,7 @@ export const ConsultaCotacoes = () => {
             ))}
           </ul>
         ) : (
-          <p className="text-white">Nenhuma cotação encontrada para o ID do produto fornecido.</p>
+          <p className="text-white">Nenhuma cotação encontrada.</p>
         )}
       </div>
     </div>

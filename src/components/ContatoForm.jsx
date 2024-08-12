@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
+import { ref, set, push } from 'firebase/database';
 import { db } from '../shared/firebase';
 
 export const ContatoForm = () => {
@@ -12,14 +12,18 @@ export const ContatoForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await addDoc(collection(db, 'contatos'), {
+      const newDocRef = push(ref(db, 'contatos'));
+
+      await set(newDocRef, {
         nome,
         cargo,
         telefone,
         email,
         fornecedorId
       });
+
       alert('Contato cadastrado com sucesso!');
+      
       setNome('');
       setCargo('');
       setTelefone('');

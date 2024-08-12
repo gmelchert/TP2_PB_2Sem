@@ -7,6 +7,8 @@ import { CotacaoForm } from './components/CotacaoForm';
 import { ConsultaCotacoes } from './components/ConsultaCotacoes';
 import { Navigation } from './components/Navigation';
 
+import { ListCotacoes } from './pages/ListCotacoes';
+
 import './index.css';
 
 const App = () => {
@@ -24,6 +26,7 @@ const App = () => {
             <Route path="/cadastro-produto" element={<ProdutoForm />} />
             <Route path="/cadastro-cotacao" element={<CotacaoForm />} />
             <Route path="/consulta-cotacoes" element={<ConsultaCotacoes />} />
+            <Route path="/listar-cotacoes" element={<ListCotacoes />} />
           </Routes>
         </div>
       </div>
